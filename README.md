@@ -4,8 +4,8 @@ JDK 17、Spring Boot 3.2、MyBatis、MySQL、Redis、RocketMQ
 快速启动
 1. MySQL：创建数据库 `qzdemo`，执行 `src/main/resources/db/schema.sql`
 2. Redis：本地默认启动 `127.0.0.1:6379`
-3. RocketMQ：启动 NameServer 和 Broker（参考官方文档）
-4. 配置：修改 `application.yml` 中的数据库密码（或用环境变量）
+3. RocketMQ：启动 NameServer 和 Broker
+4. 配置：修改 `application.yml` 中的数据库密码
 5. 运行：`mvn spring-boot:run`
 6. 访问：`http://localhost:8080`
 
