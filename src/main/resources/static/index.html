@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>qinZhong 联调页</title>
+  <style>
+    body { font-family: sans-serif; max-width: 720px; margin: 24px auto; padding: 0 16px; }
+    section { border: 1px solid #ddd; border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; }
+    label { display: block; margin: 8px 0 4px; }
+    input { width: 100%; padding: 6px; box-sizing: border-box; }
+    button { margin: 8px 8px 0 0; padding: 6px 12px; cursor: pointer; }
+    pre { background: #111; color: #eee; padding: 12px; overflow: auto; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <h1>qinZhong 简易联调</h1>
+  <p>先启动后端，默认 <code>http://localhost:8080</code>。订单接口需请求头 <code>X-Demo-User-Id</code>。</p>
+
+  <section>
+    <h2>全局</h2>
+    <label>演示用户 ID</label>
+    <input id="userId" type="number" value="10001" />
+  </section>
+
+  <section>
+    <h2>监控</h2>
+    <button id="btnMetrics">下单累计次数</button>
+  </section>
+
+  <section>
+    <h2>商品</h2>
+    <button id="btnProducts">列出商品</button>
+  </section>
+
+  <section>
+    <h2>订单</h2>
+    <label>商品 ID</label>
+    <input id="productId" type="number" value="1" />
+    <label>数量</label>
+    <input id="qty" type="number" value="1" />
+    <button id="btnCreate">创建订单</button>
+    <button id="btnList">查我的订单</button>
+    <label>订单号（支付用）</label>
+    <input id="orderNo" type="text" placeholder="从创建订单返回里复制 orderNo" />
+    <button id="btnPay">支付</button>
+  </section>
+
+  <section>
+    <h2>返回结果</h2>
+    <pre id="out">（点击上方按钮）</pre>
+  </section>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const uid = () => $("userId").value || "10001";
+
+    function show(text) { $("out").textContent = text; }
+
+    async function req(title, method, path, body) {
+      const headers = { Accept: "application/json", "X-Demo-User-Id": uid() };
+      if (body) headers["Content-Type"] = "application/json";
+      try {
+        const res = await fetch(path, { method, headers, body: body ? JSON.stringify(body) : undefined });
+        const txt = await res.text();
+        let pretty = txt;
+        try { pretty = JSON.stringify(JSON.parse(txt), null, 2); } catch (_) {}
+        show(`【${title}】\n${method} ${path}\nHTTP ${res.status}\n\n${pretty}`);
+      } catch (e) {
+        show(`【${title}】失败：${e}`);
+      }
+    }
+
+    $("btnMetrics").onclick = () => req("下单累计", "GET", "/api/metrics/orders-created");
+    $("btnProducts").onclick = () => req("商品列表", "GET", "/api/products");
+    $("btnCreate").onclick = () => req("创建订单", "POST", "/api/orders", {
+      userId: Number(uid()), productId: Number($("productId").value), qty: Number($("qty").value)
+    });
+    $("btnList").onclick = () => req("订单列表", "GET", `/api/orders?userId=${uid()}`);
+    $("btnPay").onclick = () => {
+      const orderNo = $("orderNo").value.trim();
+      if (!orderNo) return show("请先填写订单号");
+      req("支付", "POST", `/api/orders/${encodeURIComponent(orderNo)}/pay?userId=${uid()}`);
+    };
+  </script>
+</body>
+</html>

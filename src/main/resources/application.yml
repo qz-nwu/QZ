@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: qinZhong
+
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/qzdemo?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+    username: root
+    password: Qz689689748
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      database: 0
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+
+rocketmq:
+  name-server: 127.0.0.1:9876
+  producer:
+    group: qinzhong-order-producer
+  consumer:
+    order-created-group: qinzhong-consumer-order-created
+
+app:
+  demo:
+    header-user-id: X-Demo-User-Id
