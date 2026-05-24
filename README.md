@@ -11,8 +11,13 @@ JDK 17、Spring Boot 3.2、MyBatis、MySQL、Redis、RocketMQ
 
 #接口列表
 GET /api/products                           商品列表
+
 POST /api/orders                             下单
+
 GET /api/orders?userId=                     查订单
+
 POST /api/orders/{orderNo}/pay?userId=       支付
+
 GET /api/metrics/orders-created             MQ累计下单次数
+
 
