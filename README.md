@@ -10,6 +10,7 @@ JDK 17、Spring Boot 3.2、MyBatis、MySQL、Redis、RocketMQ
 6. 访问：`http://localhost:8080`
 
 #接口列表
+
 GET /api/products                           商品列表
 
 POST /api/orders                             下单
